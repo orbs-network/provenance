@@ -1,0 +1,40 @@
+{
+  "name": "provenance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production ORBS_NODE_ADDRESS=https://node1.demonet.orbs.com/vchains/1000 ORBS_VCHAIN=1000 ORBS_PRISM_URL=https://orbs-prism-demonet.herokuapp.com webpack",
+    "dev": "cross-env ORBS_NODE_ADDRESS=http://localhost:8080 ORBS_VCHAIN=42 ORBS_PRISM_URL=http://localhost:3000 webpack-dev-server --content-base public --port 9000",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public",
+    "gamma:start": "gamma-cli start-local -env experimental",
+    "gamma:stop": "gamma-cli stop-local",
+    "provenance:local": "ORBS_NODE_ADDRESS=http://localhost:8080 ORBS_VCHAIN=42 node ./src/deploy.js",
+    "provenance:testnet": "ORBS_NODE_ADDRESS=http://node1.demonet.orbs.com/vchains/1000 ORBS_VCHAIN=1000 node ./src/deploy.js"
+  },
+  "author": "Kirill Maksimov <kirill@orbs.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
+    "gh-pages": "^2.0.1",
+    "mini-css-extract-plugin": "^0.6.0",
+    "prettier": "^1.17.1",
+    "prettier-plugin-svelte": "^0.5.1",
+    "serve": "^11.0.0",
+    "style-loader": "^0.23.1",
+    "svelte": "^3.0.0",
+    "svelte-loader": "2.13.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1",
+    "brfs": "^2.0.2",
+    "transform-loader": "^0.2.4"
+  },
+  "dependencies": {
+    "big-integer": "^1.6.44",
+    "orbs-client-sdk": "^1.3.1",
+    "orbs-erc721": "git+https://github.com/orbs-network/erc721.git#master"
+  }
+}
