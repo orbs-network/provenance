@@ -1,0 +1,11 @@
+html {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.content {
+    width: 500px;
+    max-width: 70%;
+    padding-left: 20%;
+    padding-right: 20%;
+    margin: 0 auto;
+}

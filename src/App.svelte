@@ -1,14 +1,21 @@
-<script>  
+<script>
+  import * as moment from "moment";
+
   export let erc721;
   export let provenance;
-  export let tokenId;
+  
+  export let erc721ContractLink;
+  export let provenanceContractLink;
 
+  let tokenId;
   let metadata;
   let provenanceHistory;
+  let tokenOwner;
 
   const resetResults = () => {
     metadata = undefined;
     provenanceHistory = undefined;
+    tokenOwner = undefined;
   };
 
   const updateResults = async () => {
@@ -16,25 +23,55 @@
     try {
       metadata = await erc721.tokenMetadata(tokenId);
       provenanceHistory = await provenance.provenance(tokenId);
+      tokenOwner = await erc721.ownerOf(tokenId);
     } catch (err) {
       console.error(err);
     }
   };
+
+  const formatTime = (t) => {
+      return moment(t).format("YYYY/MM/DD");
+  }
 
   tokenId = 0n;
   updateResults();
 </script>
 
 <style>
-  
+.metadata img {
+    max-width: 500px;
+}
+
+.address {
+    font-style: italic;
+}
+
+.tokenDetails {
+    font-weight: bold;
+}
 </style>
 
-<div class="content-container">
-<pre>
-{JSON.stringify(metadata, 2, 2)}
-</pre>
+<div class="content">
+{#if metadata}
+    <div class="metadata">
+    <h1>{metadata.name}</h1>
+    <img src="{metadata.image}">
+    <p><span class="tokenDetails">TokenId:</span> {tokenId}</p>
+    <p><span class="tokenDetails">Current owner:</span> <span class="address">{tokenOwner}</span></p>
+    <p>{metadata.description}</p>
+</div>
+{/if}
 
-<pre>
-{JSON.stringify(provenanceHistory, 2, 2)}
-</pre>
+{#if provenanceHistory}
+<div class="provenance">
+<h2>Provenance</h2>
+{#each provenanceHistory as {From, To, Timestamp}}
+<p>On {formatTime(Timestamp)} ownership transferred from <span class="address">{From}</span> to <span class="address">{To}</span></p>
+{/each}
+</div>
+{/if}
+
+<p><a href="{erc721ContractLink}" target=_blank>ERC721 contract on Prism</a></p>
+<p><a href="{provenanceContractLink}" target=_blank>Provenance contract on Prism</a></p>
+<p><a href="https://github.com/orbs-network/provenance" target=_blank>Orbs Github</a></p>
 </div>

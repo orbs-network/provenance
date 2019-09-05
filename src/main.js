@@ -27,14 +27,21 @@ const orbsClient = new Client(
   "TEST_NET"
 );
 
-const erc721 = new ERC721(orbsClient, "ERC721", publicKey, privateKey);
-const provenance = new Provenance(orbsClient, "Provenance", publicKey, privateKey);
+const erc721ContractName = "ERC721";
+const erc721 = new ERC721(orbsClient, erc721ContractName, publicKey, privateKey);
+
+const provenanceContractName = "Provenance";
+const provenance = new Provenance(orbsClient, provenanceContractName, publicKey, privateKey);
+
+const contractLink = (contractName) => `${process.env.ORBS_PRISM_URL}/vchains/${process.env.ORBS_VCHAIN}/contract/${contractName}`;
 
 const app = new App({
   target: document.body,
   props: {
     erc721,
     provenance,
+    erc721ContractLink: contractLink(erc721ContractName),
+    provenanceContractLink: contractLink(provenanceContractName),
   }
 });
 
