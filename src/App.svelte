@@ -57,17 +57,26 @@
     <h1>{metadata.name}</h1>
     <img src="{metadata.image}">
     <p><span class="tokenDetails">TokenId:</span> {tokenId}</p>
-    <p><span class="tokenDetails">Current owner:</span> <span class="address">{tokenOwner}</span></p>
+    <p><span class="tokenDetails">Owner:</span> <span class="address">{tokenOwner}</span></p>
+    {#if provenance && provenance[0]}
+    <p><span class="tokenDetails">First owner:</span> <span class="address">{provenance[0].To}</span></p>
+    {/if}
+
+    <p><span class="tokenDetails">First owner:</span> <span class="address">{tokenOwner}</span></p>
     <p>{metadata.description}</p>
 </div>
 {/if}
 
 {#if provenanceHistory}
-<div class="provenance">
-<h2>Provenance</h2>
-{#each provenanceHistory as {From, To, Timestamp}}
-<p>On {formatTime(Timestamp)} ownership transferred from <span class="address">{From}</span> to <span class="address">{To}</span></p>
-{/each}
+    <div class="provenance">
+    <h2>Provenance</h2>
+    {#each provenanceHistory as {From, To, Timestamp}}
+        {#if From == "0x"}
+        <p>On {formatTime(Timestamp)} item created by <span class="address">{To}</span></p>
+        {:else}
+        <p>On {formatTime(Timestamp)} ownership transferred from <span class="address">{From}</span> to <span class="address">{To}</span></p>
+    {/if}
+    {/each}
 </div>
 {/if}
 
