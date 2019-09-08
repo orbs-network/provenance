@@ -48,7 +48,7 @@
 
     let previousOwner = createAccount();
     const mintingERC721 = new ERC721(client, erc721.contractName, previousOwner.publicKey, previousOwner.privateKey);
-    message("Minting new token...");
+    message(`Minting new token for ${painting.name}`);
     const tokenId = await mintingERC721.mint(painting);
 
     for (let i = 0, max = random(3, 6); i < max; i++) {
