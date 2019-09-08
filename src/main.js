@@ -38,6 +38,7 @@ const contractLink = (contractName) => `${process.env.ORBS_PRISM_URL}/vchains/${
 const app = new App({
   target: document.body,
   props: {
+    client: orbsClient,
     erc721,
     provenance,
     erc721ContractLink: contractLink(erc721ContractName),

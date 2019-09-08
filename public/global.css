@@ -9,3 +9,11 @@ html {
     padding-right: 20%;
     margin: 0 auto;
 }
+
+a {
+    color: darkslategray;
+}
+
+a:visited {
+    color: darkslategray;
+}

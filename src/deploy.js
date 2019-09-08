@@ -1,5 +1,6 @@
 const { Client, createAccount } = require("orbs-client-sdk");
 const { ERC721, Provenance, deployERC721, deployProvenance } = require("orbs-erc721");
+const paintings = require("./paintings.json");
 
 async function transferOwnership(client, erc721ContractName, owner, nextOwner, tokenId) {
     const erc721 = new ERC721(client, erc721ContractName, owner.publicKey, owner.privateKey);
@@ -26,11 +27,7 @@ async function deploy() {
     await erc721.setCallbackContract(provenanceContractName);
 
     // Tell the story
-    const tokenId = await erc721.mint({
-        "name": "Black Square by Kazimir Malevich",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg", 
-        "description": "Black Square (also known as The Black Square or Malevich's Black Square) is an iconic painting by Kazimir Malevich. The first version was done in 1915. Malevich made four variants of which the last is thought to have been painted during the late 1920s or early 1930s. Black Square was first shown in The Last Futurist Exhibition 0,10 in 1915. The work is frequently invoked by critics, historians, curators, and artists as the \"zero point of painting\", referring to the painting's historical significance and paraphrasing Malevich."
-    });
+    const tokenId = await erc721.mint(paintings[0]);
 
     const nextOwner1 = createAccount();
     const nextOwner2 = createAccount();

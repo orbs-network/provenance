@@ -1,6 +1,9 @@
 <script>
+  import { first, last } from "lodash";
+  import Management from "./Management.svelte";
   import * as moment from "moment";
 
+  export let client;
   export let erc721;
   export let provenance;
   
@@ -18,23 +21,29 @@
     tokenOwner = undefined;
   };
 
-  const updateResults = async () => {
-    resetResults();    
+  const updateResults = async (id) => {
+    resetResults();
     try {
-      metadata = await erc721.tokenMetadata(tokenId);
-      provenanceHistory = await provenance.provenance(tokenId);
-      tokenOwner = await erc721.ownerOf(tokenId);
+        tokenId = id;
+        metadata = await erc721.tokenMetadata(tokenId);
+        provenanceHistory = await provenance.provenance(tokenId);
+        tokenOwner = await erc721.ownerOf(tokenId);
     } catch (err) {
-      console.error(err);
+        resetResults();
+        console.error(err);
     }
   };
 
   const formatTime = (t) => {
-      return moment(t).format("YYYY/MM/DD");
+    return moment(t).format("YYYY/MM/DD");
   }
 
-  tokenId = 0n;
-  updateResults();
+  const handleMessage = (event) => {
+      console.log(event)
+      updateResults(event.detail.tokenId);
+  }
+
+  updateResults(0);  
 </script>
 
 <style>
@@ -43,7 +52,8 @@
 }
 
 .address {
-    font-style: italic;
+    font-family: 'Monaco', 'Courier New', Courier, monospace;
+    font-size: 0.9em;
 }
 
 .tokenDetails {
@@ -51,18 +61,20 @@
 }
 </style>
 
+<Management client={client} erc721={erc721} on:message={handleMessage} />
+
 <div class="content">
-{#if metadata}
+{#if metadata }
     <div class="metadata">
     <h1>{metadata.name}</h1>
-    <img src="{metadata.image}">
+    <img src="{metadata.image}" alt="{metadata.name}">
     <p><span class="tokenDetails">TokenId:</span> {tokenId}</p>
-    <p><span class="tokenDetails">Owner:</span> <span class="address">{tokenOwner}</span></p>
-    {#if provenance && provenance[0]}
-    <p><span class="tokenDetails">First owner:</span> <span class="address">{provenance[0].To}</span></p>
+
+    {#if provenanceHistory}
+    <p><span class="tokenDetails">Owner:</span> <span class="address">{last(provenanceHistory).To}</span></p>    
+    <p><span class="tokenDetails">First owner:</span> <span class="address">{first(provenanceHistory).To}</span></p>
     {/if}
 
-    <p><span class="tokenDetails">First owner:</span> <span class="address">{tokenOwner}</span></p>
     <p>{metadata.description}</p>
 </div>
 {/if}
