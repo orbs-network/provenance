@@ -43,6 +43,11 @@ const app = new App({
     provenance,
     erc721ContractLink: contractLink(erc721ContractName),
     provenanceContractLink: contractLink(provenanceContractName),
+    owner: {
+      address,
+      publicKey,
+      privateKey
+    }
   }
 });
 

@@ -1,5 +1,5 @@
 <script>
-  import { first, last } from "lodash";
+  import { first } from "lodash";
   import Management from "./Management.svelte";
   import Message from "./Message.svelte";
   import * as moment from "moment";
@@ -10,6 +10,7 @@
   
   export let erc721ContractLink;
   export let provenanceContractLink;
+  export let owner;
 
   let tokenId;
   let metadata;
@@ -71,7 +72,7 @@
 }
 </style>
 
-<Management client={client} erc721={erc721} on:message={handleMessage} />
+<Management client={client} erc721={erc721} owner={owner} on:message={handleMessage} />
 <Message message={message} />
 
 <div class="content">
@@ -82,7 +83,7 @@
     <p><span class="tokenDetails">TokenId:</span> {tokenId}</p>
 
     {#if provenanceHistory}
-    <p><span class="tokenDetails">Owner:</span> <span class="address">{last(provenanceHistory).To}</span></p>    
+    <p><span class="tokenDetails">Owner:</span> <span class="address">{tokenOwner}</span></p>
     <p><span class="tokenDetails">First owner:</span> <span class="address">{first(provenanceHistory).To}</span></p>
     {/if}
 

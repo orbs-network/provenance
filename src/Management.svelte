@@ -7,6 +7,7 @@
 
   export let erc721;
   export let client;
+  export let owner;
 
   let tokens = [];
   let showAddItem = true;
@@ -52,7 +53,7 @@
     const tokenId = await mintingERC721.mint(painting);
 
     for (let i = 0, max = random(3, 6); i < max; i++) {
-      const nextOwner = createAccount();
+      const nextOwner = i == max-1 ? owner : createAccount(); // always transfer to the caller in the end
       message(`Transferring ownership from ${previousOwner.address} to ${nextOwner.address}`);
       await transferOwnership(client, erc721.contractName, previousOwner, nextOwner, tokenId);
       previousOwner = nextOwner;
