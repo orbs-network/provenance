@@ -15,8 +15,8 @@ async function deploy() {
     );
     const owner = createAccount();
 
-    const erc721ContractName = "ERC721";
-    const provenanceContractName = "Provenance";
+    const erc721ContractName = process.env.ERC721 || "ERC721";
+    const provenanceContractName = process.env.PROVENANCE || "Provenance";
 
     await deployERC721(client, owner, erc721ContractName);
     await deployProvenance(client, owner, provenanceContractName);

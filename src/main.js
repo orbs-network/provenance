@@ -27,10 +27,10 @@ const orbsClient = new Client(
   "TEST_NET"
 );
 
-const erc721ContractName = "ERC721";
+const erc721ContractName = process.env.ORBS_ERC721 || "ERC721";
 const erc721 = new ERC721(orbsClient, erc721ContractName, publicKey, privateKey);
 
-const provenanceContractName = "Provenance";
+const provenanceContractName = process.env.ORBS_PROVENANCE || "Provenance";
 const provenance = new Provenance(orbsClient, provenanceContractName, publicKey, privateKey);
 
 const contractLink = (contractName) => `${process.env.ORBS_PRISM_URL}/vchains/${process.env.ORBS_VCHAIN}/contract/${contractName}`;
