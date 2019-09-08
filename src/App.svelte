@@ -11,6 +11,7 @@
   
   export let erc721ContractLink;
   export let provenanceContractLink;
+  export let namesContractLink;
   export let owner;
   export let config;
 
@@ -149,5 +150,6 @@ Signed in as<br/><span class="name" title="{owner.address}">{myName}</span>
 <hr>
 <p><a href="{erc721ContractLink}" target=_blank>ERC721 contract on Prism</a></p>
 <p><a href="{provenanceContractLink}" target=_blank>Provenance contract on Prism</a></p>
+<p><a href="{namesContractLink}" target=_blank>Names contract on Prism</a></p>
 <p><a href="https://github.com/orbs-network/provenance" target=_blank>Orbs Github</a></p>
 </div>

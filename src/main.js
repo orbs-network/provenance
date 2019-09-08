@@ -49,6 +49,7 @@ const app = new App({
     names,
     erc721ContractLink: contractLink(erc721ContractName),
     provenanceContractLink: contractLink(provenanceContractName),
+    namesContractLink: contractLink(namesContractName),
     owner: {
       address,
       publicKey,
