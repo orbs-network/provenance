@@ -1,11 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { range, isEmpty, map, includes, random } from "lodash";
-  import Chance from "chance";
-  import { createAccount } from "orbs-client-sdk";
-  import { ERC721 } from "orbs-erc721";
-  import { Names } from "../names/names";
   import paintings from "./paintings.json";
+  import { tellAStory } from "./story";
 
   export let erc721;
   export let client;
@@ -35,16 +32,6 @@
     showAddItem = tokens.length < paintings.length;
   }
 
-  async function transferOwnership(client, erc721ContractName, owner, nextOwner, tokenId) {
-    const erc721 = new ERC721(client, erc721ContractName, owner.publicKey, owner.privateKey);
-    await erc721.transferFrom(owner.address, nextOwner.address, tokenId);
-  }
-
-  async function setName(account) {
-    const names = new Names(client, config.namesContractName, account.publicKey, account.privateKey);
-    await names.set(Chance().name({ nationality: 'en' }))
-  }
-
   const addPainting = async (e) => {
     const names = map(tokens, "name");
     const availablePaintings = paintings.filter(p => !includes(names, p.name));
@@ -53,29 +40,8 @@
       return;
     }
 
-    let previousOwner = createAccount();
-    setName(previousOwner);
-
     const painting = availablePaintings[random(availablePaintings.length - 1)];
-    const mintingERC721 = new ERC721(client, config.erc721ContractName, previousOwner.publicKey, previousOwner.privateKey);
-    message(`Minting new token for ${painting.name}`);
-    const tokenId = await mintingERC721.mint(painting);
-
-    for (let i = 0, max = random(3, 6); i < max; i++) {
-      let nextOwner;
-      if (i == max-1) {
-        nextOwner = owner; // always transfer to the caller in the end
-      } else {
-        nextOwner = createAccount();
-        await setName(nextOwner);
-      }
-      message(`Transferring ownership from ${previousOwner.address} to ${nextOwner.address}`);
-      await transferOwnership(client, config.erc721ContractName, previousOwner, nextOwner, tokenId);
-
-      previousOwner = nextOwner;
-    }
-
-    message(`${painting.name} registered successfully`);
+    const tokenId = await tellAStory(client, owner, painting, config, message);
 
     updateTokenList(10);
     navigate(tokenId)();

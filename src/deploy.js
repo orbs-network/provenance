@@ -1,6 +1,7 @@
 const { Client, createAccount } = require("orbs-client-sdk");
 const { ERC721, Provenance, deployERC721, deployProvenance } = require("orbs-erc721");
 const { deploy: deployNames } = require("../names/deploy");
+const { tellAStory, setName } = require("./story");
 const paintings = require("./paintings.json");
 
 async function transferOwnership(client, erc721ContractName, owner, nextOwner, tokenId) {
@@ -30,19 +31,12 @@ async function deploy() {
     await erc721.setCallbackContract(provenanceContractName);
 
     // Tell the story
-    const tokenId = await erc721.mint(paintings[0]);
-
-    const nextOwner1 = createAccount();
-    const nextOwner2 = createAccount();
-    const nextOwner3 = createAccount();
-    const nextOwner4 = createAccount();
-    const nextOwner5 = createAccount();
-
-    await transferOwnership(client, erc721ContractName, owner, nextOwner1, tokenId);    
-    await transferOwnership(client, erc721ContractName, nextOwner1, nextOwner2, tokenId);
-    await transferOwnership(client, erc721ContractName, nextOwner2, nextOwner3, tokenId);
-    await transferOwnership(client, erc721ContractName, nextOwner3, nextOwner4, tokenId);
-    await transferOwnership(client, erc721ContractName, nextOwner4, nextOwner5, tokenId);
+    const config = {
+        erc721ContractName,
+        namesContractName
+    };
+    await setName(client, owner, config);
+    const tokenId = await tellAStory(client, owner, paintings[0], config, console.log);
 }
 
 (async () => {
