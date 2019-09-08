@@ -1,13 +1,16 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { range, isEmpty, map, includes, random } from "lodash";
+  import Chance from "chance";
   import { createAccount } from "orbs-client-sdk";
   import { ERC721 } from "orbs-erc721";
+  import { Names } from "../names/names";
   import paintings from "./paintings.json";
 
   export let erc721;
   export let client;
   export let owner;
+  export let config;
 
   let tokens = [];
   let showAddItem = true;
@@ -37,25 +40,38 @@
     await erc721.transferFrom(owner.address, nextOwner.address, tokenId);
   }
 
+  async function setName(account) {
+    const names = new Names(client, config.namesContractName, account.publicKey, account.privateKey);
+    await names.set(Chance().name({ nationality: 'en' }))
+  }
+
   const addPainting = async (e) => {
     const names = map(tokens, "name");
     const availablePaintings = paintings.filter(p => !includes(names, p.name));
     if (!availablePaintings.length) {
-        console.error("no paintings left!");
-        return;
+      console.error("no paintings left!");
+      return;
     }
 
-    const painting = availablePaintings[random(availablePaintings.length - 1)];
-
     let previousOwner = createAccount();
-    const mintingERC721 = new ERC721(client, erc721.contractName, previousOwner.publicKey, previousOwner.privateKey);
+    setName(previousOwner);
+
+    const painting = availablePaintings[random(availablePaintings.length - 1)];
+    const mintingERC721 = new ERC721(client, config.erc721ContractName, previousOwner.publicKey, previousOwner.privateKey);
     message(`Minting new token for ${painting.name}`);
     const tokenId = await mintingERC721.mint(painting);
 
     for (let i = 0, max = random(3, 6); i < max; i++) {
-      const nextOwner = i == max-1 ? owner : createAccount(); // always transfer to the caller in the end
+      let nextOwner;
+      if (i == max-1) {
+        nextOwner = owner; // always transfer to the caller in the end
+      } else {
+        nextOwner = createAccount();
+        await setName(nextOwner);
+      }
       message(`Transferring ownership from ${previousOwner.address} to ${nextOwner.address}`);
-      await transferOwnership(client, erc721.contractName, previousOwner, nextOwner, tokenId);
+      await transferOwnership(client, config.erc721ContractName, previousOwner, nextOwner, tokenId);
+
       previousOwner = nextOwner;
     }
 

@@ -1,10 +1,12 @@
 import App from "./App.svelte";
 import { ERC721, Provenance } from "orbs-erc721";
+import { Names } from "../names/names";
+import Chance from "chance";
 import {
   createAccount,
   Client,
   encodeHex,
-  decodeHex
+  decodeHex,
 } from "orbs-client-sdk";
 
 const SENDER_PUBLIC_KEY = "sender_public_key";
@@ -33,6 +35,9 @@ const erc721 = new ERC721(orbsClient, erc721ContractName, publicKey, privateKey)
 const provenanceContractName = process.env.ORBS_PROVENANCE || "Provenance";
 const provenance = new Provenance(orbsClient, provenanceContractName, publicKey, privateKey);
 
+const namesContractName = process.env.ORBS_NAMES || "Names";
+const names = new Names(orbsClient, namesContractName, publicKey, privateKey);
+
 const contractLink = (contractName) => `${process.env.ORBS_PRISM_URL}/vchains/${process.env.ORBS_VCHAIN}/contract/${contractName}`;
 
 const app = new App({
@@ -41,12 +46,18 @@ const app = new App({
     client: orbsClient,
     erc721,
     provenance,
+    names,
     erc721ContractLink: contractLink(erc721ContractName),
     provenanceContractLink: contractLink(provenanceContractName),
     owner: {
       address,
       publicKey,
       privateKey
+    },
+    config: {
+      erc721ContractName,
+      provenanceContractName,
+      namesContractName
     }
   }
 });
