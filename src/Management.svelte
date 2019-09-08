@@ -9,6 +9,7 @@
   export let client;
 
   let tokens = [];
+  let showAddItem = true;
 
   const dispatch = createEventDispatcher();
 
@@ -27,6 +28,7 @@
 
   const updateTokenList = async (num) => {
     tokens = await getTokenList(num);
+    showAddItem = tokens.length < paintings.length;
   }
 
   async function transferOwnership(client, erc721ContractName, owner, nextOwner, tokenId) {
@@ -55,17 +57,14 @@
     }
 
     updateTokenList(10);
+    navigate(tokenId)();
   }
 
   const navigate = (tokenId) => {
     return () => dispatch('message', { tokenId });
   }
 
-  const showItem = () => {
-    tokens.length < paintings.length
-  }
-
-  const showDot = (i) => i < tokens.length - 1;
+  const showDot = (i) => i < tokens.length - 1 || showAddItem;
 
   updateTokenList(10);
 </script>
@@ -82,5 +81,5 @@ nav .item {
 
 <nav>
 {#each tokens as { id, name }, idx }<span class="item"><a href="#" on:click={navigate(id)}>{name}</a>{#if showDot(idx)}&MediumSpace;•{/if}</span>&MediumSpace;{/each}
-{#if showItem()}<span class="item"><a href="#" on:click={addPainting} alt="Will generate another painting">Add item</a></span>{/if}
+{#if showAddItem}<span class="item"><a href="#" on:click={addPainting} alt="Will generate another painting">Add item</a></span>{/if}
 </nav>
