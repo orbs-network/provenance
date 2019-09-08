@@ -1,6 +1,7 @@
 <script>
   import { first, last } from "lodash";
   import Management from "./Management.svelte";
+  import Message from "./Message.svelte";
   import * as moment from "moment";
 
   export let client;
@@ -14,6 +15,8 @@
   let metadata;
   let provenanceHistory;
   let tokenOwner;
+
+  let message;
 
   const resetResults = () => {
     metadata = undefined;
@@ -39,8 +42,15 @@
   }
 
   const handleMessage = (event) => {
-      console.log(event)
-      updateResults(event.detail.tokenId);
+    const { type, tokenId, message: msg } = event.detail;
+
+    if (type === "tokenId") {
+        updateResults(tokenId);
+    }
+
+    if (type === "message") {
+        message = msg;
+    }
   }
 
   updateResults(0);  
@@ -62,6 +72,7 @@
 </style>
 
 <Management client={client} erc721={erc721} on:message={handleMessage} />
+<Message message={message} />
 
 <div class="content">
 {#if metadata }

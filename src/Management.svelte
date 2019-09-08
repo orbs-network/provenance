@@ -48,20 +48,31 @@
 
     let previousOwner = createAccount();
     const mintingERC721 = new ERC721(client, erc721.contractName, previousOwner.publicKey, previousOwner.privateKey);
+    message("Minting new token...");
     const tokenId = await mintingERC721.mint(painting);
 
     for (let i = 0, max = random(3, 6); i < max; i++) {
-        const nextOwner = createAccount();
-        await transferOwnership(client, erc721.contractName, previousOwner, nextOwner, tokenId);
-        previousOwner = nextOwner;
+      const nextOwner = createAccount();
+      message(`Transferring ownership from ${previousOwner.address} to ${nextOwner.address}`);
+      await transferOwnership(client, erc721.contractName, previousOwner, nextOwner, tokenId);
+      previousOwner = nextOwner;
     }
+
+    message(`${painting.name} registered successfully`);
 
     updateTokenList(10);
     navigate(tokenId)();
   }
 
   const navigate = (tokenId) => {
-    return () => dispatch('message', { tokenId });
+    return () => {
+      dispatch("message", { type: "tokenId", tokenId });
+      message(null);
+    }
+  }
+
+  const message = (msg) => {
+    return dispatch("message", { type: "message", message: msg });
   }
 
   const showDot = (i) => i < tokens.length - 1 || showAddItem;
@@ -77,6 +88,7 @@ nav {
 nav .item {
     white-space: nowrap;
 }
+
 </style>
 
 <nav>
