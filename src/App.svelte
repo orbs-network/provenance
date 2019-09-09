@@ -3,7 +3,8 @@
   import Management from "./Management.svelte";
   import Message from "./Message.svelte";
   import Address from "./Address.svelte";
-  import SignedIn from "./SignedIn.svelte"
+  import SignedIn from "./SignedIn.svelte";
+  import Transfer from "./Transfer.svelte";
   import * as moment from "moment";
 
   export let client;
@@ -92,7 +93,10 @@
     <p><span class="tokenDetails">TokenId:</span> {tokenId}</p>
 
     {#if provenanceHistory && nameRegistry && tokenOwner }
-    <p><span class="tokenDetails">Owner:</span> <Address address={tokenOwner} nameRegistry={nameRegistry} /></p>
+    <p>
+        <span class="tokenDetails">Owner:</span> <Address address={tokenOwner} nameRegistry={nameRegistry} />
+        <Transfer tokenOwner={tokenOwner} owner={owner} erc721={erc721} tokenId={tokenId} on:message={handleMessage} />
+    </p>
     <p><span class="tokenDetails">First owner:</span> <Address address={first(provenanceHistory).To} nameRegistry={nameRegistry} /></p>
     {/if}
 
