@@ -38,8 +38,6 @@ const provenance = new Provenance(orbsClient, provenanceContractName, publicKey,
 const namesContractName = process.env.ORBS_NAMES || "Names";
 const names = new Names(orbsClient, namesContractName, publicKey, privateKey);
 
-const contractLink = (contractName) => `${process.env.ORBS_PRISM_URL}/vchains/${process.env.ORBS_VCHAIN}/contract/${contractName}`;
-
 const app = new App({
   target: document.body,
   props: {
@@ -47,9 +45,6 @@ const app = new App({
     erc721,
     provenance,
     names,
-    erc721ContractLink: contractLink(erc721ContractName),
-    provenanceContractLink: contractLink(provenanceContractName),
-    namesContractLink: contractLink(namesContractName),
     owner: {
       address,
       publicKey,
@@ -58,7 +53,9 @@ const app = new App({
     config: {
       erc721ContractName,
       provenanceContractName,
-      namesContractName
+      namesContractName,
+      prismURL: process.env.ORBS_PRISM_URL,
+      vchain: process.env.ORBS_VCHAIN,
     }
   }
 });

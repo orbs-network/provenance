@@ -9,8 +9,7 @@
 
 <style>
 .address {
-    font-family: 'Monaco', 'Courier New', Courier, monospace;
-    font-size: 0.9em;
+    text-decoration: underline dotted;
 }
 </style>
 

@@ -3,6 +3,7 @@
   import Management from "./Management.svelte";
   import Message from "./Message.svelte";
   import Address from "./Address.svelte";
+  import SignedIn from "./SignedIn.svelte"
   import * as moment from "moment";
 
   export let client;
@@ -10,9 +11,6 @@
   export let provenance;
   export let names;
   
-  export let erc721ContractLink;
-  export let provenanceContractLink;
-  export let namesContractLink;
   export let owner;
   export let config;
 
@@ -49,6 +47,8 @@
     return moment(t).format("YYYY/MM/DD");
   }
 
+  const contractLink = (contractName) => `${config.prismURL}/vchains/${config.vchain}/contract/${contractName}`;
+
   const handleMessage = (event) => {
     const { type, tokenId, message: msg } = event.detail;
 
@@ -59,16 +59,6 @@
     if (type === "message") {
         message = msg;
     }
-  }
-
-  const getName = async () => {
-    let myName = await names.get(owner.address);
-    if (myName === "") {
-        myName = Chance().name({ nationality: "en" });
-        await names.set(myName);
-    }
-
-    return myName;
   }
 
   updateResults(0);  
@@ -82,16 +72,6 @@
 .tokenDetails {
     font-weight: bold;
 }
-
-.login {
-    z-index: 10;
-    float: right;
-    padding: 30px;
-}
-
-.login .name {
-    text-decoration: underline dotted;
-}
 </style>
 
 <Management
@@ -102,13 +82,7 @@
     on:message={handleMessage} />
 <Message message={message} />
 
-{#await getName()}
-<!-- -->
-{:then myName}
-<div class="login">
-Signed in as<br/><span class="name" title="{owner.address}">{myName}</span>
-</div>
-{/await}
+<SignedIn names={names} owner={owner} />
 
 <div class="content">
 {#if metadata }
@@ -140,8 +114,8 @@ Signed in as<br/><span class="name" title="{owner.address}">{myName}</span>
 {/if}
 
 <hr>
-<p><a href="{erc721ContractLink}" target=_blank>ERC721 contract on Prism</a></p>
-<p><a href="{provenanceContractLink}" target=_blank>Provenance contract on Prism</a></p>
-<p><a href="{namesContractLink}" target=_blank>Names contract on Prism</a></p>
+<p><a href="{contractLink(config.erc721ContractName)}" target=_blank>ERC721 contract on Prism</a></p>
+<p><a href="{contractLink(config.provenanceContractName)}" target=_blank>Provenance contract on Prism</a></p>
+<p><a href="{contractLink(config.namesContractName)}" target=_blank>Names contract on Prism</a></p>
 <p><a href="https://github.com/orbs-network/provenance" target=_blank>Orbs Github</a></p>
 </div>
