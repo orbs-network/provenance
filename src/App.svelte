@@ -95,7 +95,7 @@
     {#if provenanceHistory && nameRegistry && tokenOwner }
     <p>
         <span class="tokenDetails">Owner:</span> <Address address={tokenOwner} nameRegistry={nameRegistry} />
-        <Transfer tokenOwner={tokenOwner} owner={owner} erc721={erc721} tokenId={tokenId} on:message={handleMessage} />
+        <Transfer tokenOwner={tokenOwner} owner={owner} erc721={erc721} names={names} tokenId={tokenId} on:message={handleMessage} />
     </p>
     <p><span class="tokenDetails">First owner:</span> <Address address={first(provenanceHistory).To} nameRegistry={nameRegistry} /></p>
     {/if}
