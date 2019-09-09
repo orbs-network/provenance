@@ -2,6 +2,7 @@
   import { first, map, union } from "lodash";
   import Management from "./Management.svelte";
   import Message from "./Message.svelte";
+  import Address from "./Address.svelte";
   import * as moment from "moment";
 
   export let client;
@@ -70,21 +71,12 @@
     return myName;
   }
 
-  const addressToName = (addr) => {
-      return nameRegistry[addr.toLowerCase()] || addr;
-  }
-
   updateResults(0);  
 </script>
 
 <style>
 .metadata img {
     max-width: 500px;
-}
-
-.address {
-    font-family: 'Monaco', 'Courier New', Courier, monospace;
-    font-size: 0.9em;
 }
 
 .tokenDetails {
@@ -126,8 +118,8 @@ Signed in as<br/><span class="name" title="{owner.address}">{myName}</span>
     <p><span class="tokenDetails">TokenId:</span> {tokenId}</p>
 
     {#if provenanceHistory && nameRegistry && tokenOwner }
-    <p><span class="tokenDetails">Owner:</span> <span class="address" title="{tokenOwner}">{addressToName(tokenOwner)}</span></p>
-    <p><span class="tokenDetails">First owner:</span> <span class="address" title="{first(provenanceHistory).To}">{addressToName(first(provenanceHistory).To)}</span></p>
+    <p><span class="tokenDetails">Owner:</span> <Address address={tokenOwner} nameRegistry={nameRegistry} /></p>
+    <p><span class="tokenDetails">First owner:</span> <Address address={first(provenanceHistory).To} nameRegistry={nameRegistry} /></p>
     {/if}
 
     <p>{metadata.description}</p>
@@ -139,9 +131,9 @@ Signed in as<br/><span class="name" title="{owner.address}">{myName}</span>
     <h2>Provenance</h2>
     {#each provenanceHistory as {From, To, Timestamp}}
         {#if From == "0x"}
-        <p>On {formatTime(Timestamp)} item created by <span class="address" title="{To}">{addressToName(To)}</span></p>
+        <p>On {formatTime(Timestamp)} item created by <Address address={To} nameRegistry={nameRegistry} /></p>
         {:else}
-        <p>On {formatTime(Timestamp)} ownership transferred from <span class="address" title="{From}">{addressToName(From)}</span> to <span class="address" title="{To}">{addressToName(To)}</span></p>
+        <p>On {formatTime(Timestamp)} ownership transferred from <Address address={From} nameRegistry={nameRegistry} /> to <Address address={To} nameRegistry={nameRegistry} /></p>
     {/if}
     {/each}
 </div>
