@@ -21,4 +21,4 @@
 }
 </style>
 
-<span class="address" title="{address}" on:click={copyAddress}>{addressToName()}</span>
+<span class="address" title="Click to copy {address}" on:click={copyAddress}>{addressToName()}</span>
