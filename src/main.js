@@ -1,7 +1,6 @@
 import App from "./App.svelte";
 import { ERC721, Provenance } from "orbs-erc721";
 import { Names } from "../names/names";
-import Chance from "chance";
 import {
   createAccount,
   Client,
