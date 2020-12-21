@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cross-env NODE_ENV=production ORBS_NODE_ADDRESS=http://0xcore.orbs.com/vchains/1000006 ORBS_VCHAIN=1000006 ORBS_PRISM_URL=https://1000006.prism.orbs.network/ ORBS_ERC721=ERC721 ORBS_PROVENANCE=Provenance ORBS_NAMES=Names webpack",
+    "build": "cross-env NODE_ENV=production ORBS_NODE_ADDRESS=https://0xcore.orbs.com/vchains/1000006 ORBS_VCHAIN=1000006 ORBS_PRISM_URL=https://1000006.prism.orbs.network/ ORBS_ERC721=ERC721 ORBS_PROVENANCE=Provenance ORBS_NAMES=Names webpack",
     "dev": "cross-env ORBS_NODE_ADDRESS=http://localhost:8080 ORBS_VCHAIN=42 ORBS_PRISM_URL=http://localhost:3000 webpack-dev-server --content-base public --port 9000",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d public",
     "gamma:start": "gamma-cli start-local -env experimental",
     "gamma:stop": "gamma-cli stop-local",
     "provenance:local": "ORBS_NODE_ADDRESS=http://localhost:8080 ORBS_VCHAIN=42 node ./src/deploy.js",
-    "provenance:testnet": "ORBS_NODE_ADDRESS=http://0xcore.orbs.com/vchains/1000006 ORBS_VCHAIN=1000006 ORBS_PRISM_URL=https://1000006.prism.orbs.network/ ORBS_ERC721=ERC721 ORBS_PROVENANCE=Provenance ORBS_NAMES=Names node ./src/deploy.js"
+    "provenance:testnet": "ORBS_NODE_ADDRESS=https://0xcore.orbs.com/vchains/1000006 ORBS_VCHAIN=1000006 ORBS_PRISM_URL=https://1000006.prism.orbs.network/ ORBS_ERC721=ERC721 ORBS_PROVENANCE=Provenance ORBS_NAMES=Names node ./src/deploy.js"
   },
   "author": "Kirill Maksimov <kirill@orbs.com>",
   "license": "MIT",
